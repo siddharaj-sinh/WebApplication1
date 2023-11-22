@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -15,11 +16,13 @@ namespace WebApplication1.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private IConfiguration configuration;
         private readonly UrlOptions _urlOptions;
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<UrlOptions> urlOptions)
+        private readonly JwtConfigurationOptions _jwtOptions;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<UrlOptions> urlOptions, IOptions<JwtConfigurationOptions> jwtOptions)
         {
             _logger = logger;
             this.configuration = configuration;
             _urlOptions = urlOptions.Value;
+            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -38,6 +41,7 @@ namespace WebApplication1.Controllers
         public IActionResult GetEnv()
         {
             var t = configuration["Demo:Key1"];
+
             return Ok(new { demo = t });
         }
 
@@ -46,6 +50,26 @@ namespace WebApplication1.Controllers
         {
             var t = _urlOptions.Key1;
             return Ok(new { demo = t });
+        }
+        [HttpGet("get-jwt")]
+        public IActionResult GetJwtOptions()
+        {
+            return Ok(new
+            {
+                key = _jwtOptions.Key,
+                issuer = _jwtOptions.Issuer,
+                audience = _jwtOptions.Audience,
+                expiryInMinutes = _jwtOptions.ExpiryInMinutes,
+            });
+        }
+
+        [HttpGet("get-azure-appsetting")]
+        public IActionResult GetAnonmysOptions()
+        {
+            return Ok(new
+            {
+                t = _jwtOptions.NotInLocal
+            });
         }
     }
 }

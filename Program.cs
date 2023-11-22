@@ -16,6 +16,7 @@ namespace WebApplication1
             var temp1 = configuration["Demo:Key1"];
             Console.WriteLine(temp1);
             builder.Services.Configure<UrlOptions>(configuration.GetSection(UrlOptions.UrlKey));
+            builder.Services.Configure<JwtConfigurationOptions>(configuration.GetSection(JwtConfigurationOptions.JwtKey));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
