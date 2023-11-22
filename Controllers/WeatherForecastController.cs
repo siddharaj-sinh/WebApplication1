@@ -12,10 +12,11 @@ namespace WebApplication1.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private IConfiguration configuration;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            this.configuration = configuration;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -28,6 +29,13 @@ namespace WebApplication1.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("get-env")]
+        public IActionResult GetEnv()
+        {
+            var t = configuration["Demo:Key1"];
+            return Ok(new { demo = t });
         }
     }
 }
