@@ -1,4 +1,4 @@
-
+using WebApplication1.Controllers;
 namespace WebApplication1
 {
     public class Program
@@ -15,7 +15,7 @@ namespace WebApplication1
             builder.Services.AddControllers();
             var temp1 = configuration["Demo:Key1"];
             Console.WriteLine(temp1);
-
+            builder.Services.Configure<UrlOptions>(configuration.GetSection(UrlOptions.UrlKey));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
