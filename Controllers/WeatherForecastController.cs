@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using WebApplication1.Data;
 
 namespace WebApplication1.Controllers
 {
@@ -17,12 +19,14 @@ namespace WebApplication1.Controllers
         private IConfiguration configuration;
         private readonly UrlOptions _urlOptions;
         private readonly JwtConfigurationOptions _jwtOptions;
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<UrlOptions> urlOptions, IOptions<JwtConfigurationOptions> jwtOptions)
+        private readonly ApplicationDbContext _context;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration configuration, IOptions<UrlOptions> urlOptions, IOptions<JwtConfigurationOptions> jwtOptions, ApplicationDbContext applicationDbContext)
         {
             _logger = logger;
             this.configuration = configuration;
             _urlOptions = urlOptions.Value;
             _jwtOptions = jwtOptions.Value;
+            _context = applicationDbContext;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -70,6 +74,13 @@ namespace WebApplication1.Controllers
             {
                 t = _jwtOptions.NotInLocal
             });
+        }
+        [HttpGet("get-user")]
+        public async Task<IActionResult> GetUser() {
+
+            var result = await _context.User.ToListAsync();
+
+            return Ok( new {user=result});
         }
     }
 }
