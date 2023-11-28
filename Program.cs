@@ -18,7 +18,7 @@ namespace WebApplication1
             });
 
             // Add services to the container.
-
+            //add clomments
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddControllers();
